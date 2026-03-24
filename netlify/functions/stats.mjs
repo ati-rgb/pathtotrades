@@ -4,7 +4,7 @@ export default async (req, context) => {
   const url = new URL(req.url);
   const secret = url.searchParams.get("key");
 
-  if (secret !== Netlify.env.get("ANALYTICS_KEY")) {
+  if (secret !== process.env.ANALYTICS_KEY) {
     return new Response("Unauthorized", { status: 401 });
   }
 
