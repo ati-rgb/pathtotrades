@@ -172,8 +172,21 @@ const TRADES = {
   },
 };
 
-const STATES = {
-  CA: { name: "California", abbr: "CA", board: "Contractors State License Board (CSLB)", boardUrl: "https://cslb.ca.gov" },
+const ALL_STATES = {
+  AL:{name:"Alabama"},AK:{name:"Alaska"},AZ:{name:"Arizona"},AR:{name:"Arkansas"},
+  CA:{name:"California",board:"Contractors State License Board (CSLB)",boardUrl:"https://cslb.ca.gov",hasData:true},
+  CO:{name:"Colorado"},CT:{name:"Connecticut"},DE:{name:"Delaware"},FL:{name:"Florida"},
+  GA:{name:"Georgia"},HI:{name:"Hawaii"},ID:{name:"Idaho"},IL:{name:"Illinois"},
+  IN:{name:"Indiana"},IA:{name:"Iowa"},KS:{name:"Kansas"},KY:{name:"Kentucky"},
+  LA:{name:"Louisiana"},ME:{name:"Maine"},MD:{name:"Maryland"},MA:{name:"Massachusetts"},
+  MI:{name:"Michigan"},MN:{name:"Minnesota"},MS:{name:"Mississippi"},MO:{name:"Missouri"},
+  MT:{name:"Montana"},NE:{name:"Nebraska"},NV:{name:"Nevada"},NH:{name:"New Hampshire"},
+  NJ:{name:"New Jersey"},NM:{name:"New Mexico"},NY:{name:"New York"},NC:{name:"North Carolina"},
+  ND:{name:"North Dakota"},OH:{name:"Ohio"},OK:{name:"Oklahoma"},OR:{name:"Oregon"},
+  PA:{name:"Pennsylvania"},RI:{name:"Rhode Island"},SC:{name:"South Carolina"},SD:{name:"South Dakota"},
+  TN:{name:"Tennessee"},TX:{name:"Texas"},UT:{name:"Utah"},VT:{name:"Vermont"},
+  VA:{name:"Virginia"},WA:{name:"Washington"},WV:{name:"West Virginia"},WI:{name:"Wisconsin"},
+  WY:{name:"Wyoming"},DC:{name:"Washington D.C."}
 };
 
 /* ═══════════════════════════════════════════════
@@ -224,7 +237,92 @@ function Nav({ onHome, onQuiz, current }) {
       <span onClick={onHome} style={{ fontWeight: 800, fontSize: 15, color: P.blue, cursor: "pointer", letterSpacing: 0.5 }}>PathToTrades</span>
       <div style={{ display: "flex", gap: 16, fontSize: 13, fontWeight: 600 }}>
         <span onClick={onQuiz} style={{ color: current === "quiz" ? P.blue : P.muted, cursor: "pointer" }}>Find your trade</span>
-        <span onClick={onHome} style={{ color: current === "home" ? P.blue : P.muted, cursor: "pointer" }}>Browse trades</span>
+        <span onClick={onHome} style={{ color: current === "home" ? P.blue : P.muted, cursor: "pointer" }}>Browse by state</span>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   US MAP — clickable state grid
+   ═══════════════════════════════════════════════ */
+
+const ST_POS = [
+  ["AK",0,6],["HI",1,6],
+  ["WA",1,0],["OR",0,1],["CA",0,3],["NV",1,2],["ID",2,1],["MT",3,0],["WY",3,1],["UT",2,2],["CO",3,2],["AZ",1,3],["NM",2,3],
+  ["ND",5,0],["SD",5,1],["NE",5,2],["KS",5,3],["OK",5,4],["TX",4,5],
+  ["MN",6,0],["IA",6,1],["MO",6,2],["AR",6,3],["LA",6,4],
+  ["WI",7,0],["IL",7,1],["IN",8,1],["MI",8,0],["OH",9,0],
+  ["KY",8,2],["TN",7,3],["MS",7,4],["AL",8,4],
+  ["WV",9,2],["VA",10,2],["NC",9,3],["SC",10,3],["GA",9,4],["FL",10,5],
+  ["PA",10,1],["NY",10,0],["NJ",11,2],["DE",11,3],["MD",11,4],["DC",10,4],
+  ["CT",12,1],["RI",12,2],["MA",12,0],["VT",11,0],["NH",11,1],["ME",12,0],
+];
+
+function USMap({ onSelectState }) {
+  const [hover, setHover] = useState(null);
+  const cW = 50, cH = 40, px = 6, py = 6;
+  // dedup ME/MA overlap: shift ME
+  const positions = ST_POS.map(([a,c,r]) => {
+    if (a === "ME") return [a, 13, 0];
+    return [a,c,r];
+  });
+  return (
+    <div style={{ overflowX: "auto", padding: "0 4px" }}>
+      <svg viewBox={`0 0 ${14 * cW + px * 2} ${7 * cH + py * 2}`} style={{ width: "100%", maxWidth: 720, display: "block", margin: "0 auto" }}>
+        {positions.map(([abbr, col, row]) => {
+          const st = ALL_STATES[abbr];
+          if (!st) return null;
+          const hasData = st.hasData;
+          const isH = hover === abbr;
+          const x = px + col * cW, y = py + row * cH;
+          return (
+            <g key={abbr} onClick={() => onSelectState(abbr)} onMouseEnter={() => setHover(abbr)} onMouseLeave={() => setHover(null)} style={{ cursor: "pointer" }}>
+              <rect x={x} y={y} width={cW - 3} height={cH - 3} rx={4}
+                fill={hasData ? (isH ? "#bbf7d0" : P.greenLight) : (isH ? "#f1f5f9" : "#fff")}
+                stroke={hasData ? P.green : P.border} strokeWidth={1} />
+              <text x={x + (cW - 3) / 2} y={y + (cH - 3) / 2 + 1} textAnchor="middle" dominantBaseline="middle"
+                fill={hasData ? P.green : P.muted} fontSize={12} fontWeight={700} fontFamily={font}>{abbr}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 6, fontSize: 11, color: P.muted }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 4 }}><span style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: P.greenLight, border: `1px solid ${P.green}` }} /> Data available</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 4 }}><span style={{ display: "inline-block", width: 8, height: 8, borderRadius: 2, background: "#fff", border: `1px solid ${P.border}` }} /> Coming soon</span>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   COMING SOON STATE PAGE
+   ═══════════════════════════════════════════════ */
+
+function ComingSoonState({ stateAbbr, onBack, email, setEmail, emailSent, onSubmitEmail }) {
+  const st = ALL_STATES[stateAbbr];
+  return (
+    <div style={{ maxWidth: 620, margin: "0 auto", padding: "40px 20px", textAlign: "center" }}>
+      <button onClick={onBack} style={{ background: "none", border: "none", color: P.blue, fontWeight: 600, cursor: "pointer", fontSize: 13, fontFamily: font, marginBottom: 20, display: "block" }}>← Back to map</button>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>🏗️</div>
+      <h1 style={{ fontSize: 28, fontWeight: 900, color: P.ink, marginBottom: 8 }}>{st?.name}</h1>
+      <p style={{ fontSize: 16, color: P.muted, marginBottom: 24, lineHeight: 1.6 }}>We're building detailed trade licensing roadmaps for {st?.name}.<br />Be the first to know when it launches.</p>
+      {!emailSent ? (
+        <div style={{ maxWidth: 400, margin: "0 auto" }}>
+          <div style={{ display: "flex", gap: 6 }}>
+            <input type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} style={{ flex: 1, padding: "12px 14px", borderRadius: 6, border: `1px solid ${P.borderDark}`, background: "#fff", color: P.ink, fontSize: 14, outline: "none", fontFamily: font }} />
+            <button onClick={() => onSubmitEmail("waitlist-" + stateAbbr)} style={{ padding: "12px 24px", borderRadius: 6, border: "none", fontWeight: 700, fontSize: 14, background: P.blue, color: "#fff", cursor: "pointer", fontFamily: font, whiteSpace: "nowrap" }}>Notify me</button>
+          </div>
+          <p style={{ fontSize: 11, color: P.light, marginTop: 8 }}>One email, once — when {st?.name} goes live.</p>
+        </div>
+      ) : (
+        <div style={{ padding: 16, borderRadius: 8, background: P.greenLight, display: "inline-block" }}>
+          <span style={{ fontWeight: 700, color: P.green }}>You're on the list for {st?.name}.</span>
+        </div>
+      )}
+      <div style={{ marginTop: 40, padding: 20, borderRadius: 10, background: P.soft, border: `1px solid ${P.border}`, textAlign: "left" }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: P.ink, marginBottom: 8 }}>While you wait</div>
+        <p style={{ fontSize: 13, color: P.muted, lineHeight: 1.6 }}>Salary data, job growth, and trade comparisons are national. Take the quiz to find which trade fits you — that works for every state.</p>
       </div>
     </div>
   );
@@ -360,7 +458,7 @@ function TradeDetail({ tradeKey, state, onBack }) {
 
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: "clamp(24px, 4vw, 34px)", fontWeight: 900, color: P.ink, lineHeight: 1.1, marginBottom: 6 }}>How to Become a Licensed {t.name}</h1>
-        <p style={{ fontSize: 14, color: P.muted }}>{STATES[state].name} · {STATES[state].board}</p>
+        <p style={{ fontSize: 14, color: P.muted }}>{ALL_STATES[state]?.name || state} {ALL_STATES[state]?.board ? `· ${ALL_STATES[state].board}` : ""}</p>
         {s?.code && <p style={{ fontSize: 12, color: P.light, marginTop: 4 }}>Classification: {s.code}</p>}
       </div>
 
@@ -420,13 +518,13 @@ function TradeDetail({ tradeKey, state, onBack }) {
             <div><span style={{ color: P.muted }}>CE: </span><strong>{s.ceHours}</strong></div>
             {s.prereqs && <div style={{ gridColumn: "1 / -1" }}><span style={{ color: P.amber }}>Prerequisite: </span><strong>{s.prereqs}</strong></div>}
           </div>
-          <div style={{ marginTop: 12, fontSize: 11, color: P.light }}>Source: {STATES[state].board} · Updated March 2026</div>
+          <div style={{ marginTop: 12, fontSize: 11, color: P.light }}>Source: {ALL_STATES[state]?.board} · Updated March 2026</div>
         </div>
       )}
 
       {!s && (
         <div style={{ padding: 20, borderRadius: 10, background: P.amberLight, border: "1px solid #fde68a", textAlign: "center", marginBottom: 24 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: P.amber, marginBottom: 4 }}>Coming soon: {STATES[state]?.name || state}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: P.amber, marginBottom: 4 }}>Coming soon: {ALL_STATES[state]?.name || state}</div>
           <p style={{ fontSize: 13, color: P.mid }}>We're building detailed licensing roadmaps for this state. Enter your email below to get notified when it's ready.</p>
         </div>
       )}
@@ -450,25 +548,10 @@ function TradeDetail({ tradeKey, state, onBack }) {
 }
 
 /* ═══════════════════════════════════════════════
-   BROWSE ALL TRADES
+   LANDING PAGE — quiz CTA + US map
    ═══════════════════════════════════════════════ */
 
-function BrowseView({ onSelectTrade, onQuiz }) {
-  const [sort, setSort] = useState(null);
-  const SORTS = [
-    { key: "salary", label: "Highest paying" },
-    { key: "speed", label: "Fastest to start" },
-    { key: "bizPotential", label: "Best for business" },
-    { key: "physicalInv", label: "Least physical" },
-  ];
-
-  const sorted = Object.entries(TRADES).sort((a, b) => {
-    if (!sort) return 0;
-    if (sort === "salary") return 0; // already in rough salary order
-    if (sort === "physicalInv") return a[1].physical - b[1].physical;
-    return b[1][sort] - a[1][sort];
-  });
-
+function LandingView({ onSelectTrade, onQuiz, onSelectState }) {
   return (
     <div style={{ maxWidth: 960, margin: "0 auto", padding: "36px 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
@@ -483,29 +566,74 @@ function BrowseView({ onSelectTrade, onQuiz }) {
         <span style={{ fontSize: 11, color: P.muted, marginLeft: 6 }}>— Birmingham Group</span>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 800, color: P.ink }}>{Object.keys(TRADES).length} trades</h2>
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: P.ink, marginBottom: 4 }}>Choose your state</h2>
+        <p style={{ fontSize: 13, color: P.muted }}>Click a state to see trades and licensing requirements</p>
       </div>
-      <div style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
+
+      <USMap onSelectState={onSelectState} />
+
+      <div style={{ textAlign: "center", marginTop: 32, padding: 20, borderRadius: 10, background: P.soft, border: `1px solid ${P.border}` }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: P.ink, marginBottom: 4 }}>Not sure which trade? Start with the quiz.</div>
+        <p style={{ fontSize: 13, color: P.muted, marginBottom: 12 }}>6 questions. 2 minutes. Personalized recommendation with salary data.</p>
+        <button onClick={onQuiz} style={{ padding: "10px 24px", borderRadius: 6, border: "none", background: P.blue, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: font }}>Take the quiz</button>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   BROWSE TRADES FOR A STATE
+   ═══════════════════════════════════════════════ */
+
+function BrowseTradesView({ state, onSelectTrade, onBack, onQuiz }) {
+  const [sort, setSort] = useState(null);
+  const stInfo = ALL_STATES[state];
+  const SORTS = [
+    { key: "salary", label: "Highest paying" },
+    { key: "speed", label: "Fastest to start" },
+    { key: "bizPotential", label: "Best for business" },
+    { key: "physicalInv", label: "Least physical" },
+  ];
+  const sorted = Object.entries(TRADES).sort((a, b) => {
+    if (!sort) return 0;
+    if (sort === "salary") return 0;
+    if (sort === "physicalInv") return a[1].physical - b[1].physical;
+    return b[1][sort] - a[1][sort];
+  });
+  return (
+    <div style={{ maxWidth: 960, margin: "0 auto", padding: "28px 20px" }}>
+      <button onClick={onBack} style={{ background: "none", border: "none", color: P.blue, fontWeight: 600, cursor: "pointer", fontSize: 13, fontFamily: font, marginBottom: 20 }}>← Back to map</button>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <h1 style={{ fontSize: "clamp(22px, 4vw, 34px)", fontWeight: 900, color: P.ink, lineHeight: 1.1, marginBottom: 6 }}>Trades in {stInfo?.name || state}</h1>
+        {stInfo?.board && <p style={{ fontSize: 13, color: P.muted }}>{stInfo.board}</p>}
+        <button onClick={onQuiz} style={{ marginTop: 12, padding: "10px 24px", borderRadius: 6, border: `1px solid ${P.blue}`, background: "transparent", color: P.blue, fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: font }}>Not sure which trade? Take the quiz</button>
+      </div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap", justifyContent: "center" }}>
         {SORTS.map(s => (
           <button key={s.key} onClick={() => setSort(sort === s.key ? null : s.key)} style={{ padding: "5px 12px", borderRadius: 20, border: `1px solid ${sort === s.key ? P.blue : P.border}`, background: sort === s.key ? P.blueLight : "#fff", color: sort === s.key ? P.blue : P.muted, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: font }}>{s.label}</button>
         ))}
       </div>
-
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 10 }}>
-        {sorted.map(([key, t], i) => (
-          <div key={key} onClick={() => onSelectTrade(key)} style={{ padding: "16px 18px", borderRadius: 8, background: P.card, border: `1px solid ${P.border}`, cursor: "pointer", transition: "all 0.12s", animation: `fi 0.3s ease ${i * 0.025}s both` }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = P.blue; e.currentTarget.style.boxShadow = "0 1px 8px rgba(0,0,0,0.05)"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = P.border; e.currentTarget.style.boxShadow = "none"; }}>
-            <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 4, color: P.ink }}>{t.name}</h3>
-            <p style={{ fontSize: 12, color: P.muted, lineHeight: 1.5, marginBottom: 10 }}>{t.tagline}</p>
-            <div style={{ borderTop: `1px solid ${P.border}`, paddingTop: 8, display: "flex", justifyContent: "space-between", fontSize: 12, alignItems: "center" }}>
-              <div><span style={{ color: P.muted }}>Entry </span><span style={{ fontWeight: 700 }}>{t.salary.entry}</span></div>
-              <div><span style={{ color: P.violet, fontWeight: 600 }}>Union </span><span style={{ fontWeight: 700, color: P.violet }}>{t.salary.union}</span></div>
-              <span style={{ fontSize: 11, color: P.green, fontWeight: 600 }}>{t.growth}</span>
+        {sorted.map(([key, t], i) => {
+          const hasState = !!t.states[state];
+          return (
+            <div key={key} onClick={() => onSelectTrade(key)} style={{ padding: "16px 18px", borderRadius: 8, background: P.card, border: `1px solid ${P.border}`, cursor: "pointer", transition: "all 0.12s", animation: `fi 0.3s ease ${i * 0.025}s both` }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = P.blue; e.currentTarget.style.boxShadow = "0 1px 8px rgba(0,0,0,0.05)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = P.border; e.currentTarget.style.boxShadow = "none"; }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <h3 style={{ fontSize: 17, fontWeight: 800, color: P.ink }}>{t.name}</h3>
+                {hasState && <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 4, background: P.greenLight, color: P.green, fontWeight: 700 }}>{stInfo?.name} data</span>}
+              </div>
+              <p style={{ fontSize: 12, color: P.muted, lineHeight: 1.5, marginBottom: 10 }}>{t.tagline}</p>
+              <div style={{ borderTop: `1px solid ${P.border}`, paddingTop: 8, display: "flex", justifyContent: "space-between", fontSize: 12, alignItems: "center" }}>
+                <div><span style={{ color: P.muted }}>Entry </span><span style={{ fontWeight: 700 }}>{t.salary.entry}</span></div>
+                <div><span style={{ color: P.violet, fontWeight: 600 }}>Union </span><span style={{ fontWeight: 700, color: P.violet }}>{t.salary.union}</span></div>
+                <span style={{ fontSize: 11, color: P.green, fontWeight: 600 }}>{t.growth}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -520,14 +648,14 @@ const track = (event, data = {}) => {
 };
 
 export default function App() {
-  const [view, setView] = useState("home"); // home, quiz, quizResults, trade
+  const [view, setView] = useState("home");
   const [selectedTrade, setSelectedTrade] = useState(null);
-  const [selectedState, setSelectedState] = useState("CA");
+  const [selectedState, setSelectedState] = useState(null);
   const [quizResults, setQuizResults] = useState(null);
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
 
-  useEffect(() => { track("pageview", { page: view }); }, [view]);
+  useEffect(() => { track("pageview", { page: view, state: selectedState }); }, [view]);
 
   const submitEmail = (source) => {
     if (!email.includes("@")) return;
@@ -536,14 +664,33 @@ export default function App() {
     fd.append("email", email);
     fd.append("trade", selectedTrade || quizResults?.[0] || "none");
     fd.append("source", source);
+    fd.append("state", selectedState || "none");
     fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: fd.toString() })
-      .then(() => { setEmailSent(true); track("email_submit", { trade: selectedTrade, source }); })
+      .then(() => { setEmailSent(true); track("email_submit", { trade: selectedTrade, source, state: selectedState }); })
       .catch(() => setEmailSent(true));
   };
 
-  const goHome = () => { setView("home"); setSelectedTrade(null); };
+  const goHome = () => { setView("home"); setSelectedTrade(null); setSelectedState(null); };
   const goQuiz = () => { setView("quiz"); track("quiz_start"); };
-  const selectTrade = (key) => { setSelectedTrade(key); setView("trade"); track("trade_click", { trade: key }); window.scrollTo({ top: 0, behavior: "smooth" }); };
+
+  const selectState = (abbr) => {
+    setSelectedState(abbr);
+    setEmailSent(false);
+    track("state_click", { state: abbr });
+    if (ALL_STATES[abbr]?.hasData) {
+      setView("stateTrades");
+    } else {
+      setView("comingSoon");
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const selectTrade = (key) => {
+    setSelectedTrade(key);
+    setView("trade");
+    track("trade_click", { trade: key, state: selectedState });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: P.bg, color: P.ink, fontFamily: font }}>
@@ -551,7 +698,15 @@ export default function App() {
       <TrustStrip />
       <Nav onHome={goHome} onQuiz={goQuiz} current={view === "quiz" || view === "quizResults" ? "quiz" : "home"} />
 
-      {view === "home" && <BrowseView onSelectTrade={selectTrade} onQuiz={goQuiz} />}
+      {view === "home" && <LandingView onSelectTrade={selectTrade} onQuiz={goQuiz} onSelectState={selectState} />}
+
+      {view === "comingSoon" && selectedState && (
+        <ComingSoonState stateAbbr={selectedState} onBack={goHome} email={email} setEmail={setEmail} emailSent={emailSent} onSubmitEmail={submitEmail} />
+      )}
+
+      {view === "stateTrades" && selectedState && (
+        <BrowseTradesView state={selectedState} onSelectTrade={selectTrade} onBack={goHome} onQuiz={goQuiz} />
+      )}
 
       {view === "quiz" && (
         <QuizView onResult={(results) => { setQuizResults(results); setView("quizResults"); track("quiz_complete", { top: results[0] }); }} />
@@ -562,7 +717,11 @@ export default function App() {
       )}
 
       {view === "trade" && selectedTrade && (
-        <TradeDetail tradeKey={selectedTrade} state={selectedState} onBack={() => quizResults ? setView("quizResults") : goHome()} />
+        <TradeDetail tradeKey={selectedTrade} state={selectedState || "CA"} onBack={() => {
+          if (quizResults) setView("quizResults");
+          else if (selectedState) setView("stateTrades");
+          else goHome();
+        }} />
       )}
     </div>
   );
