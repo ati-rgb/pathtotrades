@@ -69,6 +69,7 @@ const TRADES = {
     whyChoose: "Highest earning ceiling of any specialty trade. Every building needs electricity. AI and automation can't replace hands-on wiring. Strong union options with IBEW.",
     states: {
       CA: { code: "C-10", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: false, timeline: "4–12 months", cost: "$900–$2,000+", ceHours: "32 hrs / 2 yrs", unionLocals: "IBEW Local 11 (LA), Local 569 (SD), Local 6 (SF)", unionHr: "$51+/hr" },
+      TX: { code: "Journeyman / Master", board: "TDLR", expYears: "4 (8,000 hrs for Journeyman)", exams: 1, bondAmt: "None (state level)", wcExempt: true, timeline: "2–6 months after hours met", cost: "$128–$200+", ceHours: "4 hrs / year", notes: "Apprentice registration required with TDLR before hours count. Journeyman exam split into 2 parts (NEC Knowledge + Calculations) as of March 2025. Only 27% pass rate in 2024. Open-book exam — bring your own NEC 2023 book. Master requires 12,000 hrs + 2 yrs as Journeyman. Electrical Contractor license ($110/yr) required to run a business.", unionLocals: "IBEW Local 20 (Dallas), Local 716 (Houston), Local 60 (San Antonio)", unionHr: "$40+/hr" },
     }
   },
   plumber: {
@@ -80,6 +81,7 @@ const TRADES = {
     whyChoose: "Highest union pay of any specialty trade (UA Local 447 at $64+/hr). Completely recession-proof — buildings always need water and drainage. Strong path to business ownership.",
     states: {
       CA: { code: "C-36", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: true, timeline: "4–12 months", cost: "$900–$2,000+", ceHours: "None required by CSLB", unionLocals: "UA Local 447 (Sacramento), Local 78 (LA)", unionHr: "$64+/hr" },
+      TX: { code: "Journeyman / Master / RMP", board: "TSBPE", expYears: "4 (8,000 hrs for Journeyman)", exams: 1, bondAmt: "None (state level)", wcExempt: true, timeline: "2–8 months after hours met", cost: "$345–$600+", ceHours: "24 hrs / year (Master)", notes: "Licensed through Texas State Board of Plumbing Examiners (TSBPE), NOT TDLR. Responsible Master Plumber (RMP) license needed to run a business — requires Master license + 24-hr TSBPE course + $300K liability insurance. Workers' comp is optional for all private employers in Texas — the only state where this is true.", unionLocals: "UA Local 68 (Houston), Local 142 (San Antonio)", unionHr: "$38+/hr" },
     }
   },
   hvac: {
@@ -91,6 +93,7 @@ const TRADES = {
     whyChoose: "Climate change is making HVAC more essential every year. Requires EPA 608 certification on top of license. Heat pump specialization pays $5–15/hr premium over standard HVAC work.",
     states: {
       CA: { code: "C-20", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: false, timeline: "4–12 months", cost: "$900–$2,200+", ceHours: "None required by CSLB", prereqs: "EPA 608 Universal Certification (mandatory)", unionLocals: "UA HVAC/R Service Techs", unionHr: "$45+/hr" },
+      TX: { code: "ACR Contractor (Class A/B)", board: "TDLR", expYears: "4 (or 1 yr cert + 3 yrs)", exams: 1, bondAmt: "None (state level)", wcExempt: true, timeline: "2–6 months after hours met", cost: "$165–$300+", ceHours: "8 hrs / year", notes: "Class A = unlimited tonnage. Class B = under 25 tons. Technician certification available after 2 yrs + 2,000-hr TDLR-approved program. EPA 608 still required for refrigerant handling. Insurance required: $100K+ liability. TX construction employment grew 3.2% in 2025 — 876,700 total. Workers' comp optional for private employers.", prereqs: "EPA 608 Universal Certification (mandatory for refrigerant)", unionLocals: "UA HVAC/R locals", unionHr: "$35+/hr" },
     }
   },
   genBuild: {
@@ -102,6 +105,7 @@ const TRADES = {
     whyChoose: "The most versatile license. You can bid on whole-building projects, not just specialty work. Highest path to business ownership. Most GCs eventually run their own companies.",
     states: {
       CA: { code: "B", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: true, timeline: "4–12 months", cost: "$900–$2,000+", ceHours: "5 hrs / 2 yrs", unionLocals: "Carpenters, Laborers, etc.", unionHr: "Varies by trade" },
+      TX: { code: "No state license required", board: "City-level only", expYears: "Varies by city", exams: "Varies by city", bondAmt: "Varies by city", wcExempt: true, timeline: "1–4 weeks (city registration)", cost: "$100–$500 (city fees)", ceHours: "Varies", notes: "Texas does NOT require a state-level general contractor license — one of the few states with no state GC license. Requirements vary dramatically by city: Dallas requires registration, Austin requires registration, San Antonio has a two-license system, and Houston requires NO registration at all. Workers' comp is optional for private employers. You need trade-specific licenses (electrical, plumbing, HVAC) if doing that work yourself.", unionLocals: "Carpenters, Laborers by region", unionHr: "Varies" },
     }
   },
   solar: {
@@ -113,6 +117,7 @@ const TRADES = {
     whyChoose: "22% job growth — fastest of any construction trade. Federal incentives (Inflation Reduction Act) are driving explosive demand through 2030. Great combination of outdoor work and technology.",
     states: {
       CA: { code: "C-46", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: true, timeline: "4–12 months", cost: "$900–$2,000+", ceHours: "None required", unionLocals: "IBEW (solar falls under electrical)", unionHr: "$48+/hr" },
+      TX: { code: "Electrical Contractor + Solar Retailer (SB 1036)", board: "TDLR", expYears: "Same as Electrician", exams: "Electrical exam", bondAmt: "None (state level)", wcExempt: true, timeline: "Same as Electrician path", cost: "$200–$500+", ceHours: "Same as Electrician", notes: "Solar installation in Texas requires an Electrical Contractor license through TDLR. New SB 1036 (effective Sept 2026) adds mandatory registration for solar retailers and salespeople — separate from installation licensing. Retailers must include licensed electrical contractor details in every sale. Homeowners get a 5-day cancellation window. Major growth market driven by IRA incentives.", unionLocals: "IBEW locals", unionHr: "$40+/hr" },
     }
   },
   genEng: {
@@ -124,6 +129,7 @@ const TRADES = {
     whyChoose: "Access to the largest construction projects in the country. Infrastructure spending is at historic highs. Strong union presence. Most Class A holders have engineering backgrounds.",
     states: {
       CA: { code: "A", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: true, timeline: "6–14 months", cost: "$1,200–$3,000+", ceHours: "None required", unionLocals: "Operating Engineers, Laborers, Teamsters", unionHr: "Varies" },
+      TX: { code: "No state license required", board: "City/project-level", expYears: "N/A", exams: "None (state level)", bondAmt: "Per-project", wcExempt: true, timeline: "Immediate (no state license)", cost: "Varies by city/project", ceHours: "None", notes: "Texas has no state-level heavy civil/engineering contractor license. Requirements are set by cities and project owners. Government contracts typically require bonds, insurance, and workers' comp. Texas infrastructure spending is among the highest in the nation — massive highway, pipeline, and energy projects.", unionLocals: "Operating Engineers, Laborers, Teamsters", unionHr: "Varies" },
     }
   },
   roofer: {
@@ -135,6 +141,7 @@ const TRADES = {
     whyChoose: "One of the fastest trades to start working in. Relatively low barriers to entry. Strong demand in California's climate. Quick path to crew leadership and business ownership.",
     states: {
       CA: { code: "C-39", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: false, timeline: "4–12 months", cost: "$900–$2,200+", ceHours: "None required", unionLocals: "Roofers Local 36 (LA), Local 95 (SD)", unionHr: "$40+/hr" },
+      TX: { code: "No state license required", board: "City-level only", expYears: "None (state level)", exams: "None (state level)", bondAmt: "Varies by city", wcExempt: true, timeline: "Immediate (no state license)", cost: "$100–$300 (city registration)", ceHours: "None", notes: "Texas does not require a state roofing license. Some cities require contractor registration. Workers' comp is optional. The Texas roofing market is one of the largest in the country due to hail and storm damage — high demand year-round.", unionLocals: "Roofers Local 123 (Houston), Local 22 (Dallas)", unionHr: "$30+/hr" },
     }
   },
   painter: {
@@ -146,6 +153,7 @@ const TRADES = {
     whyChoose: "Lowest barrier to entry of any licensed trade. Easiest exam. Lowest insurance costs. Fastest path to owning your own business. Marketing and client relationships matter more than technical complexity.",
     states: {
       CA: { code: "C-33", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: true, timeline: "4–10 months", cost: "$900–$1,800", ceHours: "None required", unionLocals: "IUPAT DC 36", unionHr: "$36+/hr" },
+      TX: { code: "No state license required", board: "None", expYears: "None", exams: "None", bondAmt: "None", wcExempt: true, timeline: "Immediate", cost: "Minimal (business registration only)", ceHours: "None", notes: "Texas has no state license requirement for painters. You can start a painting business with just a general business registration. Some cities may require contractor registration. EPA Lead-Safe certification required for pre-1978 homes (federal requirement, not state). This is one of the easiest trades to start a business in Texas.", unionLocals: "IUPAT", unionHr: "$25+/hr" },
     }
   },
   concrete: {
@@ -157,6 +165,7 @@ const TRADES = {
     whyChoose: "Concrete is needed on every construction project. Steady demand regardless of market conditions. Work is physically demanding but deeply satisfying. Decorative concrete (stamping, staining) is a growing premium market.",
     states: {
       CA: { code: "C-8", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: false, timeline: "4–12 months", cost: "$900–$2,200+", ceHours: "None required", unionLocals: "OPCMIA Cement Masons", unionHr: "$42+/hr" },
+      TX: { code: "No state license required", board: "None", expYears: "None", exams: "None", bondAmt: "None", wcExempt: true, timeline: "Immediate", cost: "Minimal (business registration only)", ceHours: "None", notes: "Texas has no state license requirement for concrete work. You can start immediately with a general business registration. Some cities may require contractor registration for permitted work. Workers' comp optional. Texas's massive construction market means high demand for concrete workers year-round.", unionLocals: "OPCMIA locals", unionHr: "$30+/hr" },
     }
   },
   drywall: {
@@ -168,6 +177,7 @@ const TRADES = {
     whyChoose: "Needed on literally every building project. One of the easier trades to enter. Consistent, year-round demand. Fast to learn the basics, but finishing quality separates the good from the great.",
     states: {
       CA: { code: "C-9", board: "CSLB", expYears: 4, exams: 2, bondAmt: "$25,000", wcExempt: true, timeline: "4–10 months", cost: "$900–$1,800", ceHours: "None required", unionLocals: "IUPAT", unionHr: "$38+/hr" },
+      TX: { code: "No state license required", board: "None", expYears: "None", exams: "None", bondAmt: "None", wcExempt: true, timeline: "Immediate", cost: "Minimal (business registration only)", ceHours: "None", notes: "Texas has no state license requirement for drywall installation. Start with a general business registration. Some cities may require contractor registration. Workers' comp optional. Texas's booming residential and commercial construction creates steady drywall demand.", unionLocals: "IUPAT", unionHr: "$28+/hr" },
     }
   },
 };
@@ -184,7 +194,7 @@ const ALL_STATES = {
   NJ:{name:"New Jersey"},NM:{name:"New Mexico"},NY:{name:"New York"},NC:{name:"North Carolina"},
   ND:{name:"North Dakota"},OH:{name:"Ohio"},OK:{name:"Oklahoma"},OR:{name:"Oregon"},
   PA:{name:"Pennsylvania"},RI:{name:"Rhode Island"},SC:{name:"South Carolina"},SD:{name:"South Dakota"},
-  TN:{name:"Tennessee"},TX:{name:"Texas"},UT:{name:"Utah"},VT:{name:"Vermont"},
+  TN:{name:"Tennessee"},TX:{name:"Texas",board:"Texas Dept. of Licensing & Regulation (TDLR) / TX State Board of Plumbing Examiners (TSBPE)",boardUrl:"https://tdlr.texas.gov",hasData:true},UT:{name:"Utah"},VT:{name:"Vermont"},
   VA:{name:"Virginia"},WA:{name:"Washington"},WV:{name:"West Virginia"},WI:{name:"Wisconsin"},
   WY:{name:"Wyoming"},DC:{name:"Washington D.C."}
 };
@@ -509,7 +519,7 @@ function TradeDetail({ tradeKey, state, onBack }) {
       {/* State-specific licensing info */}
       {s && (
         <div style={{ padding: 18, borderRadius: 10, background: P.soft, border: `1px solid ${P.border}`, marginBottom: 24 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: P.ink, marginBottom: 12 }}>Licensing requirements — {STATES[state].name}</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: P.ink, marginBottom: 12 }}>Licensing requirements — {ALL_STATES[state]?.name}</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 24px", fontSize: 13 }}>
             <div><span style={{ color: P.muted }}>Experience: </span><strong>{s.expYears} years journey-level</strong></div>
             <div><span style={{ color: P.muted }}>Exams: </span><strong>{s.exams} (Law & Business + Trade)</strong></div>
@@ -518,6 +528,7 @@ function TradeDetail({ tradeKey, state, onBack }) {
             <div><span style={{ color: P.muted }}>CE: </span><strong>{s.ceHours}</strong></div>
             {s.prereqs && <div style={{ gridColumn: "1 / -1" }}><span style={{ color: P.amber }}>Prerequisite: </span><strong>{s.prereqs}</strong></div>}
           </div>
+          {s.notes && <div style={{ marginTop: 12, padding: 12, borderRadius: 6, background: "#fff", border: `1px solid ${P.border}` }}><div style={{ fontSize: 11, fontWeight: 700, color: P.ink, marginBottom: 4 }}>Important notes</div><p style={{ fontSize: 12, color: P.mid, lineHeight: 1.6 }}>{s.notes}</p></div>}
           <div style={{ marginTop: 12, fontSize: 11, color: P.light }}>Source: {ALL_STATES[state]?.board} · Updated March 2026</div>
         </div>
       )}
